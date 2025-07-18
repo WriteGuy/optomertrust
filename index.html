@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. OptomerTrust Will See You Now</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #f4f4f4;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Eye Chart Styling */
+        .eye-chart {
+            text-align: center;
+            margin: 40px 0;
+            font-family: 'Courier New', monospace;
+            color: #ffd700;
+        }
+
+        .chart-line {
+            margin: 8px 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chart-line:hover {
+            opacity: 0.7;
+        }
+
+        .line-1 { font-size: 3rem; font-weight: bold; }
+        .line-2 { font-size: 2.2rem; }
+        .line-3 { font-size: 1.8rem; }
+        .line-4 { font-size: 1.4rem; }
+        .line-5 { font-size: 1.1rem; }
+        .line-6 { font-size: 0.9rem; }
+
+        .header {
+            text-align: center;
+            margin: 60px 0 40px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header .tagline {
+            font-size: 1.3rem;
+            color: #c4c4c4;
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+
+        /* Assessment Section */
+        .assessment-container {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .question-container {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            color: #ffd700;
+            text-align: center;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .option:hover {
+            background: rgba(255,215,0,0.1);
+            border-color: rgba(255,215,0,0.3);
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background: rgba(255,215,0,0.2);
+            border-color: #ffd700;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,215,0,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        .results-container {
+            display: none;
+            text-align: center;
+        }
+
+        .lens-card {
+            background: linear-gradient(135deg, #2d1b69, #1a1a2e);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border: 2px solid #ffd700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .lens-title {
+            font-size: 2rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .lens-nickname {
+            font-size: 1.2rem;
+            color: #c4c4c4;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .lens-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .personal-touch {
+            background: rgba(255,215,0,0.1);
+            border-left: 4px solid #ffd700;
+            padding: 20px;
+            margin: 25px 0;
+            font-style: italic;
+        }
+
+        .think-blink {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .disclaimer {
+            font-size: 0.95rem;
+            color: #c4c4c4;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .lens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 0.85rem;
+            color: #c4c4c4;
+        }
+
+        .lens-grid-item {
+            padding: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Email Capture */
+        .email-section {
+            background: rgba(255,215,0,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .email-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #f4f4f4;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .email-input::placeholder {
+            color: rgba(244,244,244,0.6);
+        }
+
+        .intro-text {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 40px 0;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header h1 { font-size: 2rem; }
+            .line-1 { font-size: 2rem; }
+            .line-2 { font-size: 1.5rem; }
+            .assessment-container { padding: 25px; }
+            .question { font-size: 1.2rem; }
+            .option { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Dr. OptomerTrust Will See You Now</h1>
+            <div class="tagline">Some manuscripts you read. This one reads you.</div>
+        </div>
+
+        <!-- Eye Chart -->
+        <div class="eye-chart">
+            <div class="chart-line line-1">E</div>
+            <div class="chart-line line-2">E D I T O R S</div>
+            <div class="chart-line line-3">A G E N T S &nbsp;&nbsp; R E A D E R S</div>
+            <div class="chart-line line-4">B E S T S E L L E R &nbsp;&nbsp; L I S T S</div>
+            <div class="chart-line line-5">M A R K E T &nbsp;&nbsp; P O T E N T I A L</div>
+            <div class="chart-line line-6">T H I N K &nbsp;&nbsp; T H E &nbsp;&nbsp; U N B L I N K A B L E</div>
+        </div>
+
+        <!-- Introduction -->
+        <div class="intro-text">
+            Welcome to the Lens Test. Five questions. One revelation.<br>
+            <strong>What lens are you wearing right now?</strong>
+        </div>
+
+        <!-- Assessment Container -->
+        <div class="assessment-container" id="assessmentContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Question 1 -->
+            <div class="question-container active" data-question="1">
+                <div class="question">When you're having a good day, what do you notice first?</div>
+                <div class="options">
+                    <div class="option" data-value="emotional-other">The way people seem more relaxed around me</div>
+                    <div class="option" data-value="clarity-self">How clear my thoughts feel</div>
+                    <div class="option" data-value="hyper-aware">Small details others usually miss</div>
+                    <div class="option" data-value="absence-worry">The absence of that familiar worry</div>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question-container" data-question="2">
+                <div class="question">Life throws you a curveball. Your first instinct is usually to...</div>
+                <div class="options">
+                    <div class="option" data-value="self-blame">Figure out what I did wrong</div>
+                    <div class="option" data-value="anticipate-threat">Brace for what's coming next</div>
+                    <div class="option" data-value="care-others">Make sure everyone else is okay first</div>
+                    <div class="option" data-value="retreat-think">Go quiet until I can think clearly</div>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question-container" data-question="3">
+                <div class="question">You're in a group where everyone seems to know each other. You...</div>
+                <div class="options">
+                    <div class="option" data-value="adapt-room">Become whoever the room seems to need</div>
+                    <div class="option" data-value="observe-dynamics">Observe the dynamics before engaging</div>
+                    <div class="option" data-value="missing-script">Feel like I'm missing some social script</div>
+                    <div class="option" data-value="should-stayed-home">Wonder if I should have stayed home</div>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question-container" data-question="4">
+                <div class="question">When you make a mistake, the voice in your head sounds...</div>
+                <div class="options">
+                    <div class="option" data-value="disappointed-unsurprised">Like someone who's disappointed but not surprised</div>
+                    <div class="option" data-value="urgent-cataloguing">Urgent, like it's cataloguing every flaw</div>
+                    <div class="option" data-value="apologetic-alone">Apologetic, even when no one's listening</div>
+                    <div class="option" data-value="familiar-recording">Familiar, like it's replaying an old recording</div>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question-container" data-question="5">
+                <div class="question">What makes an ordinary day feel significant?</div>
+                <div class="options">
+                    <div class="option" data-value="someone-sees">When someone really sees me</div>
+                    <div class="option" data-value="help-solve">When I help solve something for others</div>
+                    <div class="option" data-value="inner-outer-align">When my inner and outer worlds align</div>
+                    <div class="option" data-value="not-performing">When I'm not performing for anyone</div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" id="prevBtn" onclick="changeQuestion(-1)" disabled>Previous</button>
+                <button class="btn" id="nextBtn" onclick="changeQuestion(1)" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-container" id="resultsContainer">
+            <div class="lens-card" id="lensCard">
+                <!-- Results will be populated here -->
+            </div>
+
+            <div class="email-section">
+                <h3>Want Your Full Lens Profile?</h3>
+                <p>Get your complete psychological lens assessment and early access to "Think the Unblinkable"</p>
+                <input type="email" class="email-input" placeholder="Enter your email for full results" id="emailInput">
+                <br>
+                <button class="btn" onclick="submitEmail()">Send My Full Profile</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Assessment Logic
+        let currentQuestion = 1;
+        let answers = {};
+        let totalQuestions = 5;
+
+        // Lens definitions with scoring patterns
+        const lensData = {
+            'emotional-xray': {
+                title: 'EMOTIONAL X-RAY',
+                nickname: 'The Signal Catcher',
+                description: `You're the one who hears what isn't said. You pick up shifts in tone like static in a song: the false notes, the power games, the egos hiding behind buzzwords. Your gratitude may fill a room, but so does your discernment. It's a gift. And a weight.
+
+This lens sharpens your perception, but it can also make the room feel noisy when you're the only one truly listening.`,
+                personalTouch: `Your ⚡ represents those moments when you feel the room's tension before anyone speaks. This lens sharpens in crowded spaces and family dinners.`,
+                thinkBlink: `Power doesn't always wear a suit. Sometimes it wears silence and lets the room speak first. Your clarity can be costly, but it's priceless when you claim the whole table, not just the seat they offer.`,
+                triggers: ['emotional-other', 'care-others', 'observe-dynamics']
+            },
+            'snap-focus': {
+                title: 'SNAP FOCUS',
+                nickname: 'The Threat Detector',
+                description: `Your first thought is the worst-case one. You react quickly, often before the moment unfolds. You confuse urgency with importance. You're often exhausted - not from events, but from bracing for them. You've rarely said, "Let's wait and see."
+
+This lens sharpens one thing: threat. Everything else blurs behind it.`,
+                personalTouch: `Your ⚡ represents the threat your mind rehearses most often. This lens clicks into place the moment uncertainty enters the room.`,
+                thinkBlink: `Hypervigilance isn't insight. It's survival rehearsing failure. The feeling is speed. You don't have to match it.`,
+                triggers: ['anticipate-threat', 'urgent-cataloguing', 'absence-worry']
+            },
+            'mirror-fog': {
+                title: 'MIRROR FOG',
+                nickname: 'The Self-Doubter',
+                description: `You don't trust what you know - especially if no one else agrees with it. You talk yourself out of things you once felt certain about. You soften your statements even in your own mind. You assume your perception is flawed if someone questions it.
+
+This lens clouds not the facts but your confidence in seeing them.`,
+                personalTouch: `Your ⚡ represents moments when you second-guessed your truth because it met resistance. This lens fogs when you need validation most.`,
+                thinkBlink: `That wasn't need. That was clarity you weren't allowed to trust. What if this is true and you simply saw it first?`,
+                triggers: ['self-blame', 'disappointed-unsurprised', 'clarity-self']
+            },
+            'identity-blur': {
+                title: 'IDENTITY BLUR',
+                nickname: 'The Social Chameleon',
+                description: `You're whoever the room needs you to be - polished, pleasant, perceptive. You match moods like a mirror and morph expectations like a shapeshifter. You sometimes catch yourself thinking: "Who am I really - without an audience?"
+
+This lens doesn't obscure you. It duplicates you - until the original goes missing.`,
+                personalTouch: `Your ⚡ represents who you are when no one's watching. This lens blurs when you've adapted so well you forget your own face.`,
+                thinkBlink: `When everyone gets a version of you... who gets the full one? Your identity isn't a costume. It's a compass.`,
+                triggers: ['adapt-room', 'missing-script', 'not-performing']
+            },
+            'self-subtraction': {
+                title: 'SELF-SUBTRACTION',
+                nickname: 'The Disappearing Act',
+                description: `You shrink in conversations to keep things comfortable. You pre-emptively say "it's fine" - even when it isn't. You hold your tongue so tightly you forget how your voice sounds. You don't ask for help because you don't want to be "too much."
+
+This lens doesn't break you. It erases you in slow, socially acceptable strokes.`,
+                personalTouch: `Your ⚡ represents a time you made yourself smaller so others could feel bigger. This lens fogs when your needs compete with keeping peace.`,
+                thinkBlink: `That's not humility. That's self-abandonment dressed as good manners. My presence doesn't require permission. Just practice.`,
+                triggers: ['apologetic-alone', 'should-stayed-home', 'retreat-think']
+            },
+            'meaning-mismatch': {
+                title: 'MEANING MISMATCH',
+                nickname: 'The Successful Stranger',
+                description: `You've ticked the boxes, reached the milestones, filled the calendar. You post the pictures. Smile at the right times. Say you're grateful - and mean it. But something underneath keeps whispering: "Is this it?"
+
+This lens doesn't create emptiness. It just hides the fact you're living someone else's idea of full.`,
+                personalTouch: `Your ⚡ represents the gap between what looks right and what feels real. This lens shimmers when your outer success can't fill your inner question mark.`,
+                thinkBlink: `That wasn't ingratitude. That was your soul noticing the story doesn't fit anymore. Meaning isn't found in fullness. It's found in resonance.`,
+                triggers: ['inner-outer-align', 'help-solve', 'someone-sees']
+            }
+        };
+
+        function updateProgress() {
+            const progress = (currentQuestion - 1) / totalQuestions * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function changeQuestion(direction) {
+            // Hide current question
+            document.querySelector(`.question-container[data-question="${currentQuestion}"]`).classList.remove('active');
+            
+            currentQuestion += direction;
+            
+            // Show new question or results
+            if (currentQuestion > totalQuestions) {
+                showResults();
+                return;
+            }
+            
+            document.querySelector(`.question-container[data-question="${currentQuestion}"]`).classList.add('active');
+            
+            // Update buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 1;
+            document.getElementById('nextBtn').disabled = !answers[currentQuestion];
+            
+            updateProgress();
+        }
+
+        // Add click handlers to options
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionNum = this.closest('.question-container').dataset.question;
+                    
+                    // Clear previous selection
+                    this.closest('.options').querySelectorAll('.option').forEach(opt => 
+                        opt.classList.remove('selected'));
+                    
+                    // Select this option
+                    this.classList.add('selected');
+                    
+                    // Store answer
+                    answers[questionNum] = this.dataset.value;
+                    
+                    // Enable next button
+                    document.getElementById('nextBtn').disabled = false;
+                    
+                    // Auto-advance after short delay
+                    setTimeout(() => {
+                        if (currentQuestion <= totalQuestions) {
+                            changeQuestion(1);
+                        }
+                    }, 800);
+                });
+            });
+        });
+
+        function calculateLens() {
+            const answerValues = Object.values(answers);
+            const lensScores = {};
+
+            // Score each lens based on trigger matches
+            Object.keys(lensData).forEach(lens => {
+                lensScores[lens] = 0;
+                answerValues.forEach(answer => {
+                    if (lensData[lens].triggers.includes(answer)) {
+                        lensScores[lens]++;
+                    }
+                });
+            });
+
+            // Find the lens with highest score
+            let topLens = 'emotional-xray'; // default
+            let maxScore = 0;
+            
+            Object.keys(lensScores).forEach(lens => {
+                if (lensScores[lens] > maxScore) {
+                    maxScore = lensScores[lens];
+                    topLens = lens;
+                }
+            });
+
+            return topLens;
+        }
+
+        function showResults() {
+            document.getElementById('assessmentContainer').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'block';
+            
+            const lens = calculateLens();
+            const lensInfo = lensData[lens];
+            
+            document.getElementById('lensCard').innerHTML = `
+                <div class="lens-title">YOUR LENS: ${lensInfo.title}</div>
+                <div class="lens-nickname">Nickname: ${lensInfo.nickname}</div>
+                
+                <div class="lens-description">${lensInfo.description}</div>
+                
+                <div class="personal-touch">${lensInfo.personalTouch}</div>
+                
+                <div class="think-blink">
+                    <strong>A Think Blink™ to keep:</strong><br>
+                    ${lensInfo.thinkBlink}
+                </div>
+                
+                <div class="disclaimer">
+                    This is an estimated lens based on symptoms. The real discovery is yours.<br>
+                    <strong>Try Lens Cabinet / Think the Unblinkable™ for full 40-lens clarity.</strong>
+                </div>
+                
+                <div class="lens-grid">
+                    <div class="lens-grid-item">Mirror Fog</div>
+                    <div class="lens-grid-item">Snap Focus</div>
+                    <div class="lens-grid-item">Echo Lens</div>
+                    <div class="lens-grid-item">Ghost Gaze</div>
+                    <div class="lens-grid-item">Praise Prism</div>
+                    <div class="lens-grid-item">Should Shimmer</div>
+                    <div class="lens-grid-item">Grief Halo</div>
+                    <div class="lens-grid-item">Radar Frame</div>
+                    <div class="lens-grid-item">Kindness Confusion</div>
+                    <div class="lens-grid-item">Meaning Mismatch</div>
+                    <div class="lens-grid-item">Sacred Reframing</div>
+                    <div class="lens-grid-item">+ 29 more...</div>
+                </div>
+                
+                <div style="margin-top: 30px; font-size: 0.9rem; color: #c4c4c4;">
+                    From the OptomerTrust Assessment
+                </div>
+            `;
+        }
+
+        function submitEmail() {
+            const email = document.getElementById('emailInput').value;
+            if (email && email.includes('@')) {
+                alert('Thank you! Your full lens profile will be sent to ' + email + '\n\nYou\'ll also receive early access to "Think the Unblinkable" when it launches.');
+                // Here you would normally send the data to your server
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
