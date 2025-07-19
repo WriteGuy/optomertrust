@@ -543,6 +543,8 @@ This lens doesn't create emptiness. It just hides the fact you're living someone
         }
 
         function showResults() {
+            // ensure the progress bar reflects completion
+            updateProgress();
             document.getElementById('assessmentContainer').style.display = 'none';
             document.getElementById('resultsContainer').style.display = 'block';
             
@@ -591,8 +593,22 @@ This lens doesn't create emptiness. It just hides the fact you're living someone
         function submitEmail() {
             const email = document.getElementById('emailInput').value;
             if (email && email.includes('@')) {
-                alert('Thank you! Your full lens profile will be sent to ' + email + '\n\nYou\'ll also receive early access to "Think the Unblinkable" when it launches.');
-                // Here you would normally send the data to your server
+                fetch('https://api.convertkit.com/v3/forms/a831b41af7/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        api_key: 'YOUR_PUBLIC_API_KEY',
+                        email: email
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    alert('Thank you! Your full lens profile will be sent to ' + email + '\n\nYou\'ll also receive early access to "Think the Unblinkable" when it launches.');
+                })
+                .catch(err => {
+                    console.error('Error subscribing:', err);
+                    alert('Error subscribing: ' + err.message);
+                });
             } else {
                 alert('Please enter a valid email address.');
             }
