@@ -543,6 +543,8 @@ This lens doesn't create emptiness. It just hides the fact you're living someone
         }
 
         function showResults() {
+            // ensure the progress bar reflects completion
+            updateProgress();
             document.getElementById('assessmentContainer').style.display = 'none';
             document.getElementById('resultsContainer').style.display = 'block';
             
