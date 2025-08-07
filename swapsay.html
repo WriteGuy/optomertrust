@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SwapSay Translator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+      }
+      .translator,
+      .user-info,
+      .lucky {
+        background: white;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      input,
+      select,
+      button {
+        padding: 8px;
+        margin: 5px;
+      }
+      #output {
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      #luckyResult {
+        margin-top: 10px;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>SwapSay Translator</h1>
+    <div class="translator">
+      <h2>Check a word</h2>
+      <input type="text" id="wordInput" placeholder="Enter a word" />
+      <select id="direction">
+        <option value="en-vn">English ➜ Vietnamese</option>
+        <option value="vn-en">Vietnamese ➜ English</option>
+      </select>
+      <button id="translateBtn">Translate</button>
+      <div id="output"></div>
+    </div>
+
+    <div class="user-info">
+      <h2>Save your details</h2>
+      <input type="text" id="nameInput" placeholder="Name" />
+      <input type="email" id="emailInput" placeholder="Email" />
+      <button id="saveBtn">Save</button>
+      <div id="saveMsg"></div>
+    </div>
+
+    <div class="lucky">
+      <h2>Feeling Lucky?</h2>
+      <button id="luckyBtn">I feel lucky</button>
+      <div id="luckyResult"></div>
+    </div>
+
+    <script>
+      const dictionary = {
+        pho: "phở",
+        "banh mi": "bánh mì",
+        "ca phe": "cà phê",
+        bia: "bia",
+        com: "cơm",
+        "xin chao": "xin chào",
+        "cam on": "cảm ơn",
+        "xin loi": "xin lỗi",
+        "tam biet": "tạm biệt",
+        "sua chua": "sữa chua",
+        "xe om": "xe ôm",
+        "chill chill": "chill chill",
+      };
+      const vnToEn = {};
+      Object.keys(dictionary).forEach((en) => {
+        vnToEn[dictionary[en]] = en;
+      });
+
+      const learned = JSON.parse(localStorage.getItem("learnedWords") || "[]");
+
+      document.getElementById("translateBtn").addEventListener("click", () => {
+        const word = document
+          .getElementById("wordInput")
+          .value.trim()
+          .toLowerCase();
+        const dir = document.getElementById("direction").value;
+        let result = "";
+        if (dir === "en-vn") {
+          result = dictionary[word] || "Not found";
+          if (dictionary[word]) storeWord(dictionary[word]);
+        } else {
+          result = vnToEn[word] || "Not found";
+          if (vnToEn[word]) storeWord(vnToEn[word]);
+        }
+        document.getElementById("output").textContent = result;
+      });
+
+      function storeWord(word) {
+        if (!learned.includes(word)) {
+          learned.push(word);
+          localStorage.setItem("learnedWords", JSON.stringify(learned));
+        }
+      }
+
+      document.getElementById("saveBtn").addEventListener("click", () => {
+        const name = document.getElementById("nameInput").value.trim();
+        const email = document.getElementById("emailInput").value.trim();
+        if (name && email) {
+          localStorage.setItem("userName", name);
+          localStorage.setItem("userEmail", email);
+          document.getElementById("saveMsg").textContent = "Saved!";
+        } else {
+          document.getElementById("saveMsg").textContent =
+            "Please enter both name and email.";
+        }
+      });
+
+      const luckyMessages = [
+        "Lucky you! Grab an extra snack.",
+        "Oops! Lose a snack to the pile.",
+        "Swap seats with the player on your left.",
+        "Bonus turn! Go again.",
+        "Yikes! Skip your next turn.",
+        "Everyone cheers—you earn a high five!",
+      ];
+
+      document.getElementById("luckyBtn").addEventListener("click", () => {
+        const msg =
+          luckyMessages[Math.floor(Math.random() * luckyMessages.length)];
+        document.getElementById("luckyResult").textContent = msg;
+      });
+    </script>
+  </body>
+</html>

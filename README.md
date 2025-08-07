@@ -29,6 +29,13 @@ The page embeds a ConvertKit form using this script:
 
 Ensure the form is published in ConvertKit and the URL is correct. Replace the script tag if you update the form.
 
+## SwapSay Translator
+
+The repository also includes a lighthearted translation helper at `swapsay.html`.
+It lets players check Vietnamese–English words, store their details in local
+storage and try an **I feel lucky** button that produces random advantages or
+setbacks for the game.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
